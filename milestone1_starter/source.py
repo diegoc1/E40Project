@@ -113,7 +113,7 @@ class Source:
         print "\tSource-coded bit length: ", len(encoded_bits)
         print "\tCompression rate: ", 1.0 * len(encoded_bits) / len(srcbits)
 
-        return self.symbol_count_bit_array(symbol_counts), srcbits
+        return self.symbol_count_bit_array(symbol_counts), encoded_bits
 
         
 
@@ -142,11 +142,12 @@ class Source:
             symbol = np.packbits(srcbits[i: i+symbol_length])[0]
             huffman_encoded_bits = huffman_map[symbol]
             new_bit_string = np.append(new_bit_string, huffman_encoded_bits)
-            #print "Converting", srcbits[i: i+symbol_length], "to", huffman_encoded_bits
+            print "Converting", srcbits[i: i+symbol_length], "to", huffman_encoded_bits
             i += symbol_length
-
+        
         left_over_bits = srcbits[i:]
         new_bit_string = np.append(new_bit_string, left_over_bits)
+        
 
         return new_bit_string
 
