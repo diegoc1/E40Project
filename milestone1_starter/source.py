@@ -84,11 +84,24 @@ class Source:
         # Given the payload length and the type of source 
         # (image, text, monotone), form the header
         # Add header-extension if needed 
-        data = np.array([[payload_length], [srctype]], dtype=np.uint8)
-        header_bits = np.unpackbits([data])
-        header_bits = np.concatenate((header_bits, stat))
 
-        # header_bits = np.append(header_bits, stat)
+        #Add payload bits to header
+        payload_bits = np.binary_repr(payload_length)
+        header_bits = [int(char) for char in payload_bits]
+        if len(header_bits) < 16:
+            for i in range(16 - len(header_bits)):
+                header_bits.insert(0, 0)
+
+        #Add source type bits to header
+        type_bits = np.binary_repr(srctype)
+        if (len(type_bits) != 2):
+            print "Header Error: src_type is not valid"
+        header_bits.insert(0, int(type_bits[1]))
+        header_bits.insert(0, int(type_bits[0]))
+
+        #Add stat bits
+        header_bits = np.array(header_bits)
+        header_bits = np.concatenate((header_bits, stat))
 
         return header_bits
 

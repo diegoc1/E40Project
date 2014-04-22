@@ -42,15 +42,26 @@ class Sink:
         # No return value required .
         pass
 
+    def getIntFromBinaryArr(self, numpyArr):
+        bit_array = numpyArr.tolist()
+        bit_string = ''.join(str(bin_num) for bin_num in bit_array)
+        return int(bit_string, 2)
+
     def read_header(self, header_bits): 
         # Given the header bits, compute the payload length
         # and source type (compatible with get_header on source)
         # Get information for decompression if needed
- 
+        srctype = self.getIntFromBinaryArr(header_bits[0:2])
+        payload_length = self.getIntFromBinaryArr(header_bits[2:18])
+
+        stat = 0
         print '\tRecd header: ', # fill in here (exclude the extension)
         print '\tLength from header: ', # fill in here (length of the payload)
         print '\tSource type: ', # fill in here
+
+
         return srctype, payload_length, stat
+
 
 
     
