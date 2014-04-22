@@ -108,10 +108,14 @@ class Source:
 
         #Add source type bits to header
         type_bits = np.binary_repr(srctype)
-        if (len(type_bits) != 2):
+        if (len(type_bits) == 1):
+            header_bits.insert(0, int(type_bits[0]))
+            header_bits.insert(0, 0)
+        elif (len(type_bits) == 2):
+            header_bits.insert(0, int(type_bits[1]))
+            header_bits.insert(0, int(type_bits[0]))
+        else:
             print "Header Error: src_type is not valid"
-        header_bits.insert(0, int(type_bits[1]))
-        header_bits.insert(0, int(type_bits[0]))
 
         #Add stat size bits to header
         imgSize = 0
