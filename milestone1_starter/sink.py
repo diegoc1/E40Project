@@ -68,6 +68,7 @@ class Sink:
 
 
     def getIntFromBinaryArr(self, numpyArr):
+        numpyArr = numpyArr.astype(int)
         bit_array = numpyArr.tolist()
         bit_string = ''.join(str(bin_num) for bin_num in bit_array)
         return int(bit_string, 2)
@@ -78,6 +79,7 @@ class Sink:
         # Get information for decompression if needed
         srctype = self.getIntFromBinaryArr(header_bits[0:2])
         payload_length = self.getIntFromBinaryArr(header_bits[2:18])
+        stat_length = self.getIntFromBinaryArr(header_bits[18:34])
 
         stat = header_bits[18:]
 

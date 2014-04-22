@@ -101,8 +101,18 @@ class Source:
         header_bits.insert(0, int(type_bits[1]))
         header_bits.insert(0, int(type_bits[0]))
 
-        #Add stat bits
-        header_bits = np.array(header_bits)
+        #Add stat size bits to header
+        imgSize = 0
+        statSize = len(stat)
+        stat_size_bit_string = np.binary_repr(statSize)
+        stat_size_bits = [int(char) for char in stat_size_bit_string]
+        if len(stat_size_bits) < 16:
+            for i in range(16 - len(stat_size_bits)):
+                stat_size_bits.insert(0, 0)
+        header_bits = np.array(header_bits, np.uint8)
+        header_bits = np.concatenate((header_bits, stat_size_bits))
+
+        #Add stat data bits
         header_bits = np.concatenate((header_bits, stat))
 
         return header_bits
