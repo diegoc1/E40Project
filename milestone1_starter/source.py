@@ -17,7 +17,7 @@ class Source:
         self.monotone = monotone
         self.fname = filename
         self.compress = compress
-        #print 'Source: '
+        print '----- Source: -----'
 
     def process(self):
         # Form the databits, from the filename
@@ -99,57 +99,24 @@ class Source:
         # Given the source bits, get the statistics of the symbols
         # Compress using huffman coding
         # Return statistics and the source-coded bits
-        symbol_length = 4
 
          #Get probs on each symbol
         encoder = HuffmanEncoder()
-        symbol_counts = encoder.huffman_counts(srcbits, symbol_length)
+        symbol_counts, unencoded_count = encoder.huffman_counts(srcbits)
         encoding_map = encoder.huffman_encoding_map(symbol_counts)
 
-        encoded_bits = self.rebuild_bit_string(encoding_map, srcbits, symbol_length)
+        encoded_bits = encoder.build_bit_string_with_encoding_map(encoding_map, srcbits)
 
-
+        print "Compression statistics from encoding..."
         print "\tSource bit length: ", len(srcbits)
         print "\tSource-coded bit length: ", len(encoded_bits)
         print "\tCompression rate: ", 1.0 * len(encoded_bits) / len(srcbits)
+        print
 
-        return self.symbol_count_bit_array(symbol_counts), encoded_bits
-
-        
-
-
-    def symbol_count_bit_array(self, symbol_counts):
-        bit_array = np.array([], dtype=np.bool)
-        for symbol in symbol_counts.keys():
-            symbol_bits = np.unpackbits(np.array([symbol], dtype=np.uint8))
-            count = symbol_counts[symbol]
-            count_bits = np.unpackbits(np.array([count], dtype=np.uint8))
-
-            #Append symbol and then count
-            bit_array = np.append(bit_array, symbol_bits)
-            bit_array = np.append(bit_array, count_bits)
-
-        return bit_array.astype(np.bool)
+        return encoder.create_symbol_count_bit_array(symbol_counts, unencoded_count), encoded_bits
 
 
-    def rebuild_bit_string(self, huffman_map, srcbits, symbol_length):
-        new_bit_string = np.array([])
-
-        i = 0
-        while i <= len(srcbits) - symbol_length:
-
-            #Retrieve the number associated with bit pattern
-            symbol = np.packbits(srcbits[i: i+symbol_length])[0]
-            huffman_encoded_bits = huffman_map[symbol]
-            new_bit_string = np.append(new_bit_string, huffman_encoded_bits)
-            print "Converting", srcbits[i: i+symbol_length], "to", huffman_encoded_bits
-            i += symbol_length
-        
-        left_over_bits = srcbits[i:]
-        new_bit_string = np.append(new_bit_string, left_over_bits)
-        
-
-        return new_bit_string
+    
 
         
 

@@ -6,12 +6,13 @@ import binascii
 import random
 
 import numpy as np
+from huffman_encoder import HuffmanEncoder
 
 
 class Sink:
     def __init__(self, compression):
         self.compression = compression
-        print 'Sink:'
+        print '----- Sink: -----'
 
     def process(self, recd_bits):
         # Process the recd_bits to form the original transmitted
@@ -53,9 +54,28 @@ class Sink:
 
 
     
+    
 
     def huffman_decode(self, codedbits, stat):
         # Given the source-coded bits and the statistics of symbols,
         # decompress the huffman code and return the decoded source bits
-        srcbits = np.array([0, 0, 1])
+
+        decoder = HuffmanEncoder()
+
+        #Build statistics
+        symbol_counts, unencoded_count = decoder.symbol_counts_from_statistics_bits(stat)
+
+        #Get decoding map
+        decoding_map = decoder.huffman_decoding_map(symbol_counts)
+
+        #Decode using map
+        srcbits = decoder.build_bit_string_from_decoding_map(decoding_map, codedbits, unencoded_count)
+
         return srcbits
+
+
+
+
+
+
+
