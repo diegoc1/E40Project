@@ -3,10 +3,9 @@ from source import Source
 import numpy as np
 from common_srcsink import hamming
 
-compress = False
+compress = True
 sou = Source(1, "testfiles/columns.png", compress)
 sink = Sink(compress)
-
 
 a, b, c = sou.process()
 srcbits = sink.process(c)

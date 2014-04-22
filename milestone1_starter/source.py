@@ -6,7 +6,7 @@ import binascii
 import random
 
 import numpy as np
-from huffman_encoder import HuffmanEncoder
+from common_srcsink import HuffmanEncoder
 
 class Source:
     def __init__(self, monotone, filename=None, compress=False):
@@ -147,7 +147,6 @@ class Source:
         encoder = HuffmanEncoder()
         symbol_counts, unencoded_count = encoder.huffman_counts(srcbits)
         encoding_map = encoder.huffman_encoding_map(symbol_counts)
-
         encoded_bits = encoder.build_bit_string_with_encoding_map(encoding_map, srcbits)
 
         print "Compression statistics from encoding..."

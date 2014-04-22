@@ -6,7 +6,7 @@ import binascii
 import random
 
 import numpy as np
-from huffman_encoder import HuffmanEncoder
+from common_srcsink import HuffmanEncoder
 
 
 class Sink:
