@@ -31,6 +31,21 @@ class Sink:
         #print '\tRecd', , 'source bits' # fill in here
 
         # Return the received source bits for comparison purposes
+
+        if (self.compression):
+            srctype, payload_length, stat = self.read_header(recd_bits)
+            payload_bits = recd_bits[-payload_length:]
+            srcbits = self.huffman_decode(payload_bits, stat)
+        else:
+            srcbits = recd_bits
+
+        if (srctype == 0):
+            print "Monotone"
+        elif (srctype == 1):
+            sink.image_from_bits(srcbits, "rcd-image.png")
+        elif (srctype == 2):
+            print sink.bits2text(srcbits)
+
         return srcbits
 
     def bits2text(self, bits):
@@ -90,7 +105,7 @@ class Sink:
         payload_length = self.getIntFromBinaryArr(header_bits[2:18])
         stat_length = self.getIntFromBinaryArr(header_bits[18:34])
 
-        stat = header_bits[18:]
+        stat = header_bits[34:34+stat_length]
 
         print '\tRecd header: ', # fill in here (exclude the extension)
         print '\tLength from header: ', # fill in here (length of the payload)

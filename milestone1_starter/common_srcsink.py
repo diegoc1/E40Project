@@ -18,6 +18,4 @@ def hamming(arr1,arr2):
 	for i in xrange(len(arr1)):
 		if arr1[i] != arr2[i]:
 			dist = dist + 1
-	return dist
-
-    return dist, (1.0 * dist) / len(arr1)
+	return dist, (1.0 * dist) / len(arr1)

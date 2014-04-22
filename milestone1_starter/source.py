@@ -32,11 +32,16 @@ class Source:
             # Send monotone (the bits are all 1s for monotone bits)
             srcbits = np.ones(self.monotone)      
 
-        encoding_response = self.huffman_encode(srcbits)
+        if self.compress:
+            encoding_response = self.huffman_encode(srcbits)
+            header_bits = self.get_header(srcbits.size, srctype, encoding_response[0])
+            payload = encoding_response[1]
+            databits = np.concatenate((header_bits, payload))
+            return srcbits, payload, databits
+        
+        return srcbits, srcbits, srcbits 
 
-        header_bits = self.get_header(srcbits.size, srctype, encoding_response[0])
-        payload = encoding_response[1]
-        databits = np.concatenate((header_bits, payload))
+        
 
         # Perform Huffman coding if the compression option is on
         # compress will be to be False if you send monotone
@@ -49,7 +54,7 @@ class Source:
         # srcbits is the bit sequence representing source data
         # payload is the data part that is sent over the channel
         # databits is the bit sequence that is sent over the channel (including header)
-        return srcbits, payload, databits
+        
 
     def text2bits(self, filename):
         # Given a text file, convert to bits
@@ -75,6 +80,8 @@ class Source:
 
         img_arr = np.array(img.getdata(), numpy.uint8)
 
+        #We decided to encode the length of each row to be more robust
+        #Works for even non 32x32 files
         row_length = img.size[1]
         row_length_bits = np.unpackbits(np.array([row_length], dtype=np.uint8))
         bit_array = np.append(bit_array, row_length_bits)
@@ -85,9 +92,6 @@ class Source:
             pix_bits = np.unpackbits(np.array([pix_val], dtype=np.uint8))
             bit_array = np.append(bit_array, pix_bits)
 
-
-        print bit_array
-        print
         return bit_array            
 
     def get_header(self, payload_length, srctype, stat):
