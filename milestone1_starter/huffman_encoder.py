@@ -227,9 +227,15 @@ class HuffmanEncoder:
 		print "Mapping encoded bits..."
 		print "Coded bits: " + str(codedbits)
 
-		while i <= len(codedbits) - unencoded_count:
+		while i < len(codedbits) - unencoded_count:
+			curr_bits = self.format_bit_array(np.append(curr_bits, codedbits[i]))
 			curr_bits_key = str(curr_bits)
-			if i > 0 and curr_bits_key in decoding_map:
+
+			if curr_bits_key not in decoding_map:
+				
+				print "\t--> No match for " + curr_bits_key
+
+			else:
 				#Decode and append to srcbits
 				srcbits = np.concatenate((srcbits, decoding_map[curr_bits_key]))
 
@@ -238,11 +244,8 @@ class HuffmanEncoder:
 				#Reset curr_bits
 				curr_bits = np.array([])
 
-			else:
-				curr_bits = self.format_bit_array(np.append(curr_bits, codedbits[i]))
-				print "\t--> No match for " + curr_bits_key + " - appending " + str(codedbits[i])
-
-				i += 1
+			i += 1
+				
 
 		#Append whatever's left over (unencoded bits)
 		srcbits = np.concatenate((srcbits, curr_bits, codedbits[i:]))
