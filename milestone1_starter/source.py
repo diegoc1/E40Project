@@ -43,6 +43,8 @@ class Source:
 
         databits = np.concatenate((header_bits, payload))
 
+        print "\tCompression rate: ", 1.0 * len(databits) / len(srcbits)
+        print
         print '\tSource type: ', srctype
         print '\tPayload Length: ', len(payload)
         print '\tHeader: ', header_bits[:18]
@@ -152,8 +154,7 @@ class Source:
         print "Compression statistics from encoding..."
         print "\tSource bit length: ", len(srcbits)
         print "\tSource-coded bit length: ", len(encoded_bits)
-        print "\tCompression rate: ", 1.0 * len(encoded_bits) / len(srcbits)
-        print
+        
 
         return encoder.create_symbol_count_bit_array(symbol_counts, unencoded_count), encoded_bits
 
