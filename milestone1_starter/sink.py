@@ -34,8 +34,8 @@ class Sink:
 
         
         srctype, payload_length, stat = self.read_header(recd_bits)
-
         payload_bits = recd_bits[-payload_length:]
+
         if self.compression:
             srcbits = self.huffman_decode(payload_bits, stat)
         else:

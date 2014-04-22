@@ -37,8 +37,10 @@ class Source:
         else:
             encoding_response = (None, srcbits)
 
+
         header_bits = self.get_header(encoding_response[1].size, srctype, encoding_response[0])
         payload = encoding_response[1]
+
         databits = np.concatenate((header_bits, payload))
 
         print '\tSource type: ', srctype
@@ -87,7 +89,6 @@ class Source:
         row_length = img.size[1]
         row_length_bits = np.unpackbits(np.array([row_length], dtype=np.uint8))
         bit_array = np.append(bit_array, row_length_bits)
-        print bit_array
 
         for pix_tup in img_arr:
             pix_val = pix_tup[0]
