@@ -135,7 +135,7 @@ class HuffmanEncoder:
 			symbol = np.packbits(srcbits[i: i+self.symbol_length])[0]
 			huffman_encoded_bits = huffman_map[symbol]
 			new_bit_string = np.append(new_bit_string, huffman_encoded_bits)
-			print "\t--> Converting", srcbits[i: i+self.symbol_length], "to", huffman_encoded_bits
+			#print "\t--> Converting", srcbits[i: i+self.symbol_length], "to", huffman_encoded_bits
 			i += self.symbol_length
 
 		left_over_bits = srcbits[i:]
@@ -200,7 +200,8 @@ class HuffmanEncoder:
 
 		print "Building encoding map..."
 		for key in decodings.keys():
-			print "\t--> Mapped " + key + " to " + str(decodings[key])
+			#print "\t--> Mapped " + key + " to " + str(decodings[key])
+			pass
 		print
 
 		return decodings
@@ -234,14 +235,14 @@ class HuffmanEncoder:
 			curr_bits_key = str(curr_bits)
 
 			if curr_bits_key not in decoding_map:
-				
-				print "\t--> No match for " + curr_bits_key
+				pass
+				#print "\t--> No match for " + curr_bits_key
 
 			else:
 				#Decode and append to srcbits
 				srcbits = np.concatenate((srcbits, decoding_map[curr_bits_key]))
 
-				print "\t--> Matched " + curr_bits_key + " to " + str(decoding_map[curr_bits_key])
+				#print "\t--> Matched " + curr_bits_key + " to " + str(decoding_map[curr_bits_key])
 
 				#Reset curr_bits
 				curr_bits = np.array([])
@@ -251,7 +252,7 @@ class HuffmanEncoder:
 
 		#Append whatever's left over (unencoded bits)
 		srcbits = np.concatenate((srcbits, curr_bits, codedbits[i:]))
-
+		print
 		return self.format_bit_array(srcbits)
 
 

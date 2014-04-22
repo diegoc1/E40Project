@@ -37,10 +37,35 @@ class Sink:
         # Convert the received payload to text (string)
         return  text
 
-    def image_from_bits(self, bits,filename):
+    def image_from_bits(self, bits, filename):
         # Convert the received payload to an image and save it
         # No return value required .
-        pass
+        pixel_values = np.array([], dtype=np.uint)
+
+        #Retrieve length of each row
+        row_length_bits = bits[0:8]
+        row_length = np.packbits(row_length_bits)[0]
+
+        print "Forming image from bits..."
+        print "Row length bits: " + str(row_length_bits)
+        print "\tFound row length of " + str(row_length)
+        print
+
+        pixel_idx = 8
+        while pixel_idx < len(bits):
+
+            pixel_bits = bits[pixel_idx:pixel_idx+8]
+            pixel_value = np.packbits(pixel_bits)[0]
+            pixel_values = np.append(pixel_values, pixel_value)
+
+            pixel_idx += 8 #int
+
+        img = Image.new('L', (len(pixel_values) / row_length, row_length)) 
+        img.putdata(pixel_values)
+        img.save(filename)
+
+        print pixel_values
+
 
     def getIntFromBinaryArr(self, numpyArr):
         bit_array = numpyArr.tolist()

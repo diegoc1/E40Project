@@ -74,6 +74,12 @@ class Source:
         bit_array = np.array([], bool)
 
         img_arr = np.array(img.getdata(), numpy.uint8)
+
+        row_length = img.size[1]
+        row_length_bits = np.unpackbits(np.array([row_length], dtype=np.uint8))
+        print "row_length_bits", row_length_bits
+        bit_array = np.append(bit_array, row_length_bits)
+
         for pix_tup in img_arr:
             pix_val = pix_tup[0]
             pix_bits = np.unpackbits(np.array([pix_val], dtype=np.uint8))
