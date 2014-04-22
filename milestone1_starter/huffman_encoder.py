@@ -76,10 +76,11 @@ class HuffmanEncoder:
 	################################################
 
 	def huffman_encoding_map(self, symbol_counts):
-		root = self.huffman_encoding_tree(symbol_counts)
 
 		encodings = {}
-		self.search_huffman_node_encoding(root, np.array([], dtype=np.uint), encodings)
+		if len(symbol_counts.keys()):
+			root = self.huffman_encoding_tree(symbol_counts)		
+			self.search_huffman_node_encoding(root, np.array([], dtype=np.uint), encodings)
 
 		print "Building encoding map..."
 		for key in encodings.keys():
@@ -169,7 +170,6 @@ class HuffmanEncoder:
 
 		symbol_counts = {}
 
-
 		unencoded_count_bits = statistics_bits[0:8].astype(np.uint8)
 		unencoded_count = np.packbits(unencoded_count_bits)[0]
 		
@@ -192,9 +192,11 @@ class HuffmanEncoder:
 		return symbol_counts, unencoded_count
 
 	def huffman_decoding_map(self, symbol_counts):
-		root = self.huffman_encoding_tree(symbol_counts)
 		decodings = {}
-		self.search_huffman_node_decoding(root, np.array([], dtype=np.uint), decodings)
+
+		if len(symbol_counts.keys()):
+			root = self.huffman_encoding_tree(symbol_counts)
+			self.search_huffman_node_decoding(root, np.array([], dtype=np.uint), decodings)
 
 		print "Building encoding map..."
 		for key in decodings.keys():

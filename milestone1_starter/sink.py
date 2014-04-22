@@ -54,7 +54,8 @@ class Sink:
         srctype = self.getIntFromBinaryArr(header_bits[0:2])
         payload_length = self.getIntFromBinaryArr(header_bits[2:18])
 
-        stat = 0
+        stat = header_bits[18:]
+
         print '\tRecd header: ', # fill in here (exclude the extension)
         print '\tLength from header: ', # fill in here (length of the payload)
         print '\tSource type: ', # fill in here
