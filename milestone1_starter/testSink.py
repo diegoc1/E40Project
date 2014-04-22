@@ -33,7 +33,6 @@ srcbits = sink.process(c)
 
 # print
 # print
-print len(srcbits)
 print 
 print hamming(srcbits, a)
 

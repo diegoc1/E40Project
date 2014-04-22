@@ -45,7 +45,7 @@ class Source:
 
         print '\tSource type: ', srctype
         print '\tPayload Length: ', len(payload)
-        print '\tHeader: ', header_bits
+        print '\tHeader: ', header_bits[:18]
         return srcbits, payload, databits
         
 
@@ -135,7 +135,7 @@ class Source:
 
             #Add stat data bits
             header_bits = np.concatenate((header_bits, stat))
-
+        print "\tHeader length: ", len(header_bits)
         return header_bits
 
     def huffman_encode(self, srcbits):

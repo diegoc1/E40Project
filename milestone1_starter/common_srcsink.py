@@ -92,10 +92,10 @@ class HuffmanEncoder:
 
 		symbol_probs = sorted(symbol_probs, key=lambda x: x[0])
 
-		print "Finding probabilities for sequences..."
-		for i in xrange(len(symbol_probs)):
-			print "\t" + str(symbol_probs[i][0]) + " --> " + str(symbol_probs[i][1])
-		print
+		#print "Finding probabilities for sequences..."
+		#for i in xrange(len(symbol_probs)):
+		#	print "\t" + str(symbol_probs[i][0]) + " --> " + str(symbol_probs[i][1])
+		#print
 
 		return symbol_probs
 
@@ -110,10 +110,10 @@ class HuffmanEncoder:
 			root = self.huffman_encoding_tree(symbol_counts)		
 			self.search_huffman_node_encoding(root, np.array([], dtype=np.uint), encodings)
 
-		print "Building encoding map..."
-		for key in encodings.keys():
-			print "\t--> Mapped " + str(key) + " (" + str(self.bits_from_int(key)) + ") to " + str(encodings[key])
-		print
+		#print "Building encoding map..."
+		#for key in encodings.keys():
+		#	print "\t--> Mapped " + str(key) + " (" + str(self.bits_from_int(key)) + ") to " + str(encodings[key])
+		#print
 
 		return encodings
 
@@ -155,7 +155,7 @@ class HuffmanEncoder:
 
 	def build_bit_string_with_encoding_map(self, huffman_map, srcbits):
 		new_bit_string = np.array([])
-		print "Building bit string from encoding map..."
+		#print "Building bit string from encoding map..."
 		i = 0
 		while i <= len(srcbits) - self.symbol_length:
 
@@ -169,7 +169,7 @@ class HuffmanEncoder:
 		left_over_bits = srcbits[i:]
 		new_bit_string = np.append(new_bit_string, left_over_bits)
 
-		print
+		#print
 		return new_bit_string
 
 	def create_symbol_count_bit_array(self, symbol_counts, unencoded_count):
@@ -201,9 +201,9 @@ class HuffmanEncoder:
 		unencoded_count_bits = statistics_bits[0:8].astype(np.uint8)
 		unencoded_count = np.packbits(unencoded_count_bits)[0]
 		
-		print"Retrieving statistics..."
-		print "\tFound " + str(unencoded_count) + " unencoded bits"
-		print
+		#print"Retrieving statistics..."
+		#print "\tFound " + str(unencoded_count) + " unencoded bits"
+		#print
 
 		i = 8;
 
@@ -226,7 +226,7 @@ class HuffmanEncoder:
 			root = self.huffman_encoding_tree(symbol_counts)
 			self.search_huffman_node_decoding(root, np.array([], dtype=np.uint), decodings)
 
-		print "Building encoding map..."
+		#print "Building encoding map..."
 		for key in decodings.keys():
 			#print "\t--> Mapped " + key + " to " + str(decodings[key])
 			pass
@@ -255,8 +255,8 @@ class HuffmanEncoder:
 		i = 0
 		curr_bits = np.array([], dtype=np.uint)
 
-		print "Mapping encoded bits..."
-		print "Coded bits: " + str(codedbits)
+		#print "Mapping encoded bits..."
+		#print "Coded bits: " + str(codedbits)
 
 		while i < len(codedbits) - unencoded_count:
 			curr_bits = self.format_bit_array(np.append(curr_bits, codedbits[i]))
@@ -280,7 +280,7 @@ class HuffmanEncoder:
 
 		#Append whatever's left over (unencoded bits)
 		srcbits = np.concatenate((srcbits, curr_bits, codedbits[i:]))
-		print
+		#print
 		return self.format_bit_array(srcbits)
 
 

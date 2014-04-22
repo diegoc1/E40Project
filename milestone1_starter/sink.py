@@ -28,7 +28,7 @@ class Sink:
         # If its an image, save it as "rcd-image.png"
         # If its a text, just print out the text
         
-        #print '\tRecd', , 'source bits' # fill in here
+        print '\tRecd', len(recd_bits), 'source bits' # fill in here
 
         # Return the received source bits for comparison purposes
 
@@ -72,10 +72,10 @@ class Sink:
         row_length_bits = bits[0:8]
         row_length = np.packbits(row_length_bits)[0]
 
-        print "Forming image from bits..."
-        print "Row length bits: " + str(row_length_bits)
-        print "\tFound row length of " + str(row_length)
-        print
+        #print "Forming image from bits..."
+        #print "Row length bits: " + str(row_length_bits)
+        #print "\tFound row length of " + str(row_length)
+        #print
 
         pixel_idx = 8
         while pixel_idx < len(bits):
@@ -90,7 +90,7 @@ class Sink:
         img.putdata(pixel_values)
         img.save(filename)
 
-        print pixel_values
+        #print pixel_values
 
 
     def getIntFromBinaryArr(self, numpyArr):
@@ -111,9 +111,9 @@ class Sink:
         else:
             stat = None
 
-        print '\tRecd header: ', # fill in here (exclude the extension)
-        print '\tLength from header: ', # fill in here (length of the payload)
-        print '\tSource type: ', # fill in here
+        print '\tRecd header: ', header_bits[:18] # fill in here (exclude the extension)
+        print '\tLength from header: ', payload_length # fill in here (length of the payload)
+        print '\tSource type: ', srctype # fill in here
 
 
         return srctype, payload_length, stat
