@@ -30,26 +30,28 @@ class Source:
 
         else:  
             # Send monotone (the bits are all 1s for monotone bits)
-            srcbits = np.ones(self.monotone)      
+            srcbits = np.ones(self.monotone, dtype=np.uint)      
 
         if self.compress:
             encoding_response = self.huffman_encode(srcbits)
-            header_bits = self.get_header(srcbits.size, srctype, encoding_response[0])
-            payload = encoding_response[1]
-            databits = np.concatenate((header_bits, payload))
-            return srcbits, payload, databits
+        else:
+            encoding_response = (None, srcbits)
+
+        header_bits = self.get_header(encoding_response[1].size, srctype, encoding_response[0])
+        payload = encoding_response[1]
+        databits = np.concatenate((header_bits, payload))
+
+        print '\tSource type: ', srctype
+        print '\tPayload Length: ', len(payload)
+        print '\tHeader: ', header_bits
+        return srcbits, payload, databits
         
-        return srcbits, srcbits, srcbits 
 
         
 
         # Perform Huffman coding if the compression option is on
         # compress will be to be False if you send monotone
         # (handled in sendrecv.py)
-
-        print '\tSource type: ', # fill in here
-        print '\tPayload Length: ', # fill in here
-        print '\tHeader: ', # fill in here (exclude the extension)
 
         # srcbits is the bit sequence representing source data
         # payload is the data part that is sent over the channel
@@ -117,19 +119,21 @@ class Source:
         else:
             print "Header Error: src_type is not valid"
 
-        #Add stat size bits to header
-        imgSize = 0
-        statSize = len(stat)
-        stat_size_bit_string = np.binary_repr(statSize)
-        stat_size_bits = [int(char) for char in stat_size_bit_string]
-        if len(stat_size_bits) < 16:
-            for i in range(16 - len(stat_size_bits)):
-                stat_size_bits.insert(0, 0)
-        header_bits = np.array(header_bits, np.uint8)
-        header_bits = np.concatenate((header_bits, stat_size_bits))
+        
+        if stat != None:
+            #Add stat size bits to header
+            imgSize = 0
+            statSize = len(stat)
+            stat_size_bit_string = np.binary_repr(statSize)
+            stat_size_bits = [int(char) for char in stat_size_bit_string]
+            if len(stat_size_bits) < 16:
+                for i in range(16 - len(stat_size_bits)):
+                    stat_size_bits.insert(0, 0)
+            header_bits = np.array(header_bits, np.uint8)
+            header_bits = np.concatenate((header_bits, stat_size_bits))
 
-        #Add stat data bits
-        header_bits = np.concatenate((header_bits, stat))
+            #Add stat data bits
+            header_bits = np.concatenate((header_bits, stat))
 
         return header_bits
 
