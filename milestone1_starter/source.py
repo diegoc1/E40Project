@@ -56,11 +56,15 @@ class Source:
         with open(filename, 'r') as f:
             lines = f.read().split('\n')
         bit_array = np.array([], bool)
-        for line in lines:
+        for i, line in enumerate(lines):
             for ch in line:
                 int_val = ord(ch)
                 char_bits = np.unpackbits(np.array([int_val], dtype=np.uint8))
-                bit_array = np.append(bit_array, char_bits)
+                bit_array = np.append(bit_array, char_bits) 
+            if i != (len(lines) - 1):
+                n_int_val = ord('\n')
+                n_char_bits = np.unpackbits(np.array([n_int_val], dtype=np.uint8))
+                bit_array = np.append(bit_array, n_char_bits)
         return bit_array            
 
 
@@ -73,13 +77,17 @@ class Source:
 
         row_length = img.size[1]
         row_length_bits = np.unpackbits(np.array([row_length], dtype=np.uint8))
-        print "row_length_bits", row_length_bits
         bit_array = np.append(bit_array, row_length_bits)
+        print bit_array
 
         for pix_tup in img_arr:
             pix_val = pix_tup[0]
             pix_bits = np.unpackbits(np.array([pix_val], dtype=np.uint8))
             bit_array = np.append(bit_array, pix_bits)
+
+
+        print bit_array
+        print
         return bit_array            
 
     def get_header(self, payload_length, srctype, stat):
@@ -116,9 +124,6 @@ class Source:
         header_bits = np.concatenate((header_bits, stat))
 
         return header_bits
-
-
-    
 
     def huffman_encode(self, srcbits):
         # Given the source bits, get the statistics of the symbols

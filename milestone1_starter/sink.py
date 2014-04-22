@@ -35,7 +35,16 @@ class Sink:
 
     def bits2text(self, bits):
         # Convert the received payload to text (string)
-        return  text
+        text = ''
+
+        i = 0
+        while i < len(bits):
+            char_bits = bits[i:i+8]
+            ord_val = np.packbits(char_bits)
+            ch = chr(ord_val)
+            text += ch
+            i += 8
+        return text
 
     def image_from_bits(self, bits, filename):
         # Convert the received payload to an image and save it

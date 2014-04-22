@@ -13,6 +13,22 @@ class HuffmanEncoder:
 	def __init__(self):
 		self.symbol_length = 4
 
+	def unpackbits16(self, num):
+		bit_string = np.binary_repr(num)
+		bit_array = [int(char) for char in bit_string]
+
+		#Add leading 0's if neccessary
+		for i in range(16 - len(bit_array)):
+			bit_array.insert(0, 0)
+
+		return np.array(bit_array)
+
+	def packbits16(self, numpyArr):
+		numpyArr = numpyArr.astype(int)
+		bit_array = numpyArr.tolist()
+		bit_string = ''.join(str(bin_num) for bin_num in bit_array)
+		return int(bit_string, 2)
+
 	################################################
 	#Methods shared by encoding and decoding
 	################################################
@@ -23,12 +39,11 @@ class HuffmanEncoder:
 	def huffman_encoding_tree(self, symbol_counts):
 		symbol_probs = self.huffman_probabilities(symbol_counts)
 
-		ctr = 0
+		ctr = len(symbol_probs)
 
 		#Use priority queue to keep track of least likely
 		priority_queue = PriorityQueue()
 		for i, tup in enumerate(symbol_probs):
-			print i
 			priority_queue.put((tup[1], tup[0], TreeNode(symbol=tup[0])))
 
         #Start building the tree
@@ -39,9 +54,6 @@ class HuffmanEncoder:
 
 				dq1 = priority_queue.get()
 				dq2 = priority_queue.get()
-
-				print dq1[2]
-				print dq2[2]
 
 				node1 = dq1[2]
 				node2 = dq2[2]
@@ -76,6 +88,12 @@ class HuffmanEncoder:
 			symbol_probs.append(symbol_prob_tuple)
 
 		symbol_probs = sorted(symbol_probs, key=lambda x: x[0])
+
+		print "Finding probabilities for sequences..."
+		for i in xrange(len(symbol_probs)):
+			print "\t" + str(symbol_probs[i][0]) + " --> " + str(symbol_probs[i][1])
+		print
+
 		return symbol_probs
 
 	################################################
@@ -161,7 +179,7 @@ class HuffmanEncoder:
 		for symbol in symbol_counts.keys():
 			symbol_bits = np.unpackbits(np.array([symbol], dtype=np.uint8))
 			count = symbol_counts[symbol]
-			count_bits = np.unpackbits(np.array([count], dtype=np.uint8))
+			count_bits = self.unpackbits16(count)
 
 			#Append symbol and then count
 			bit_array = np.append(bit_array, symbol_bits)
@@ -190,12 +208,12 @@ class HuffmanEncoder:
 			symbol_bits = statistics_bits[i:i+8].astype(np.uint8)
 			symbol_int = np.packbits(symbol_bits)[0]
 
-			count_int_bits = statistics_bits[i+8:i+16].astype(np.uint8)
-			count = np.packbits(count_int_bits)[0]
+			count_int_bits = statistics_bits[i+8:i+24].astype(np.uint8)
+			count = self.packbits16(count_int_bits)
 
 			symbol_counts[symbol_int] = count
 
-			i += 16 #jump 2 ints
+			i += 24 #jump 2 ints
 		return symbol_counts, unencoded_count
 
 	def huffman_decoding_map(self, symbol_counts):
@@ -242,8 +260,8 @@ class HuffmanEncoder:
 			curr_bits_key = str(curr_bits)
 
 			if curr_bits_key not in decoding_map:
-				pass
 				#print "\t--> No match for " + curr_bits_key
+				pass
 
 			else:
 				#Decode and append to srcbits
