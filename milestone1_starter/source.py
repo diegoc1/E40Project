@@ -6,11 +6,7 @@ import binascii
 import random
 
 import numpy as np
-
 from huffman_encoder import HuffmanEncoder
-
-
-
 
 class Source:
     def __init__(self, monotone, filename=None, compress=False):

@@ -1,5 +1,4 @@
 import numpy as np
-import numpy as np
 from collections import Counter
 from Queue import PriorityQueue
 
@@ -9,7 +8,6 @@ class TreeNode:
 		self.left_child = left_child
 		self.right_child = right_child
 		self.parent = parent
-
 
 class HuffmanEncoder:
 	def __init__(self):
@@ -25,10 +23,13 @@ class HuffmanEncoder:
 	def huffman_encoding_tree(self, symbol_counts):
 		symbol_probs = self.huffman_probabilities(symbol_counts)
 
+		ctr = 0
+
 		#Use priority queue to keep track of least likely
 		priority_queue = PriorityQueue()
-		for tup in symbol_probs:
-			priority_queue.put((tup[1], TreeNode(symbol=tup[0])))
+		for i, tup in enumerate(symbol_probs):
+			print i
+			priority_queue.put((tup[1], tup[0], TreeNode(symbol=tup[0])))
 
         #Start building the tree
 		while not priority_queue.empty():
@@ -39,8 +40,11 @@ class HuffmanEncoder:
 				dq1 = priority_queue.get()
 				dq2 = priority_queue.get()
 
-				node1 = dq1[1]
-				node2 = dq2[1]
+				print dq1[2]
+				print dq2[2]
+
+				node1 = dq1[2]
+				node2 = dq2[2]
 
 				parent_node = TreeNode(left_child=node1, right_child=node2)
 				node1.parent = parent_node
@@ -48,13 +52,14 @@ class HuffmanEncoder:
 
 				#Insert parent into the priority queue
 				new_prob = dq1[0] + dq2[0]
-				priority_queue.put((new_prob, parent_node))
+				priority_queue.put((new_prob, ctr, parent_node))
+				ctr += 1
 
 				root = parent_node
 
 			else:
 				dq = priority_queue.get()
-				root = dq[1]
+				root = dq[2]
 		return root
 
 	def bits_from_int(self, number):
@@ -69,6 +74,8 @@ class HuffmanEncoder:
 		for symbol in symbol_counts.keys():
 			symbol_prob_tuple = (symbol, 1.0 * symbol_counts[symbol] / total)
 			symbol_probs.append(symbol_prob_tuple)
+
+		symbol_probs = sorted(symbol_probs, key=lambda x: x[0])
 		return symbol_probs
 
 	################################################
